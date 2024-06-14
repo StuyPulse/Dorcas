@@ -10,7 +10,7 @@ import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.streams.IStream;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
-import com.stuypulse.stuylib.streams.filters.LowPassFilter;
+import com.stuypulse.stuylib.streams.filters.JerkLimit;
 
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Drivetrain.Stalling;
@@ -19,6 +19,14 @@ import com.stuypulse.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DrivetrainDrive extends CommandBase {
+
+    private static final double kMaxVelocity = 4.0; // m/s
+    private static final double kMaxAcceleration = 6.0; // m/s/s
+    private static final double kMaxJerk = 200.0; // m/s/s/s
+
+    private static final double kMaxAngularVelocity = 3.0 * Math.PI; // rad/s
+    private static final double kMaxAngularAcceleration = 30.0 * Math.PI; // rad/s/s
+    // Angular Jerk is stupid and doesnt exist
 
     private final Drivetrain drivetrain;
     private final Gamepad driver;
@@ -39,30 +47,27 @@ public class DrivetrainDrive extends CommandBase {
                 IStream.create(() -> driver.getRightTrigger() - driver.getLeftTrigger())
                         .filtered(
                                 x -> SLMath.deadband(x, Settings.Drivetrain.SPEED_DEADBAND.get()),
-                                x -> SLMath.spow(x, Settings.Drivetrain.SPEED_POWER.get()),
-                                new LowPassFilter(Settings.Drivetrain.SPEED_FILTER));
+                                x -> x * kMaxVelocity,
+                                new JerkLimit(kMaxAcceleration, kMaxJerk));
 
         this.angle =
                 IStream.create(() -> driver.getLeftX())
                         .filtered(
                                 x -> SLMath.deadband(x, Settings.Drivetrain.ANGLE_DEADBAND.get()),
-                                x -> SLMath.spow(x, Settings.Drivetrain.ANGLE_POWER.get()),
-                                new LowPassFilter(Settings.Drivetrain.ANGLE_FILTER));
+                                x -> x * kMaxAngularVelocity,
+                                new JerkLimit(kMaxAngularAcceleration, -1));
 
         addRequirements(drivetrain);
     }
 
     public void execute() {
-        if (driver.getRawLeftButton()) {
+        if (driver.getRawRightButton() || stalling.get()) {
             drivetrain.setLowGear();
-            drivetrain.arcadeDrive(speed.get() - 0.1, angle.get());
-        } else if (driver.getRawRightButton() || stalling.get()) {
-            drivetrain.setLowGear();
-            drivetrain.arcadeDrive(speed.get(), angle.get());
         } else {
             drivetrain.setHighGear();
-            drivetrain.curvatureDrive(speed.get(), angle.get());
         }
+
+        drivetrain.arcadeDriveUnits(speed.get(), angle.get(), kMaxVelocity);
     }
 
     public boolean isFinished() {

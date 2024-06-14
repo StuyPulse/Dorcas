@@ -6,6 +6,7 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.*;
+import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -17,6 +18,10 @@ public class Robot extends TimedRobot {
 
     private RobotContainer robot;
     private Command auto;
+
+    public Robot() {
+        super(1.0 / (double) Settings.UPDATE_RATE);
+    }
 
     /*************************/
     /*** ROBOT SCHEDULEING ***/

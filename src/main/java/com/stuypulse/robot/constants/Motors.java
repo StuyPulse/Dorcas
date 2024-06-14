@@ -9,6 +9,7 @@ import static com.revrobotics.CANSparkMax.IdleMode.*;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 /*-
  * File containing all of the configurations that different motors require.
@@ -50,16 +51,27 @@ public interface Motors {
         public final IdleMode IDLE_MODE;
         public final int CURRENT_LIMIT_AMPS;
         public final double OPEN_LOOP_RAMP_RATE;
+        public final int UPDATE_RATE;
+
+        public Config(
+                boolean inverted,
+                IdleMode idleMode,
+                int currentLimitAmps,
+                double openLoopRampRate,
+                int updateRate) {
+            this.INVERTED = inverted;
+            this.IDLE_MODE = idleMode;
+            this.CURRENT_LIMIT_AMPS = currentLimitAmps;
+            this.OPEN_LOOP_RAMP_RATE = openLoopRampRate;
+            this.UPDATE_RATE = updateRate;
+        }
 
         public Config(
                 boolean inverted,
                 IdleMode idleMode,
                 int currentLimitAmps,
                 double openLoopRampRate) {
-            this.INVERTED = inverted;
-            this.IDLE_MODE = idleMode;
-            this.CURRENT_LIMIT_AMPS = currentLimitAmps;
-            this.OPEN_LOOP_RAMP_RATE = openLoopRampRate;
+            this(inverted, idleMode, currentLimitAmps, openLoopRampRate, Settings.UPDATE_RATE);
         }
 
         public Config(boolean inverted, IdleMode idleMode, int currentLimitAmps) {
@@ -75,6 +87,10 @@ public interface Motors {
             motor.setIdleMode(IDLE_MODE);
             motor.setSmartCurrentLimit(CURRENT_LIMIT_AMPS);
             motor.setOpenLoopRampRate(OPEN_LOOP_RAMP_RATE);
+            motor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500 / UPDATE_RATE);
+            motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 1000 / UPDATE_RATE);
+            motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000 / UPDATE_RATE);
+            motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 2500 / UPDATE_RATE);
             motor.burnFlash();
         }
     }

@@ -11,7 +11,7 @@ allprojects {
     }
 }
 
-final String STUYLIB_VERSION = 'v2022.6.0'
+final String STUYLIB_VERSION = 'v2022.6.1'
 def ROBOT_MAIN_CLASS = "com.stuypulse.robot.Main"
 
 sourceCompatibility = JavaVersion.VERSION_11

@@ -13,6 +13,7 @@ import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Drivetrain.*;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -320,6 +321,28 @@ public class Drivetrain extends SubsystemBase {
         }
 
         drivetrain.feed();
+    }
+
+    public void tankDriveUnits(double leftMetersPerSecond, double rightMetersPerSecond) {
+        SimpleMotorFeedforward ff = Settings.Drivetrain.Motion.MOTOR_FEED_FORWARD;
+        double leftVolts = ff.calculate(leftMetersPerSecond);
+        double rightVolts = ff.calculate(rightMetersPerSecond);
+        tankDriveVolts(leftVolts, rightVolts);
+    }
+
+    public void arcadeDriveUnits(double velocity, double angular, double maxVelocity) {
+        double left = velocity;
+        double right = velocity;
+
+        left += 0.5 * angular * Settings.Drivetrain.TRACK_WIDTH;
+        right -= 0.5 * angular * Settings.Drivetrain.TRACK_WIDTH;
+
+        double scale = maxVelocity / Math.max(maxVelocity, Math.max(left, right));
+
+        left *= scale;
+        right *= scale;
+
+        tankDriveUnits(left, right);
     }
 
     /*******************
