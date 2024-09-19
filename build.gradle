@@ -1,8 +1,7 @@
 plugins {
     id "java"
-
-    id "com.diffplug.spotless" version "5.10.2"
-    id "edu.wpi.first.GradleRIO" version "2022.4.1"
+    id "edu.wpi.first.GradleRIO" version "2024.3.2"
+    id "com.diffplug.spotless" version "6.22.0"
 }
 
 allprojects {
@@ -11,12 +10,16 @@ allprojects {
     }
 }
 
-final String STUYLIB_VERSION = 'v2022.6.0'
+// Set this to the latest version of StuyLib.
+// You can check here: https://github.com/StuyPulse/StuyLib/releases.
+final String STUYLIB_VERSION = 'v2024.1.5'
+
 def ROBOT_MAIN_CLASS = "com.stuypulse.robot.Main"
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
-
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
@@ -34,8 +37,7 @@ deploy {
                 // First part is artifact name, 2nd is artifact type
                 // getTargetTypeClass is a shortcut to get the class type using a string
 
-                frcJava(getArtifactTypeClass('FRCJavaArtifact')) {
-                }
+                frcJava(getArtifactTypeClass('FRCJavaArtifact')) {}
 
                 // Static files artifact
                 frcStaticFileDeploy(getArtifactTypeClass('FileTreeArtifact')) {
@@ -56,7 +58,7 @@ wpi.java.debugJni = false
 def includeDesktopSupport = false
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
-// Also defines JUnit 4.
+// Also defines JUnit 5.
 dependencies {
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
@@ -75,16 +77,27 @@ dependencies {
     nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
     simulationRelease wpi.sim.enableRelease()
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.1'
 
     implementation "com.github.StuyPulse:StuyLib:${STUYLIB_VERSION}";
 }
 
+// Simulation configuration (e.g. environment variables).
+wpi.sim.addGui().defaultEnabled = true
+wpi.sim.addDriverstation()
+
 spotless {
     enforceCheck = false
     java {
-        targetExclude("src/main/java/com/stuypulse/robot/commands/auton/*.java")
-        licenseHeaderFile "LICENSE"
+        targetExclude("src/main/java/com/stuypulse/robot/commands/autons/*.java")
+        licenseHeader '''
+/************************ PROJECT IZZI *************************/
+/* Copyright (c) 2024 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
+
+'''
 
         googleJavaFormat().aosp()
         
@@ -106,10 +119,6 @@ spotless {
     }
 }
 
-// Simulation configuration (e.g. environment variables).
-wpi.sim.addGui().defaultEnabled = true
-wpi.sim.addDriverstation()
-
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
@@ -123,3 +132,8 @@ jar {
 deployArtifact.jarTask = jar
 wpi.java.configureExecutableTasks(jar)
 wpi.java.configureTestTasks(test)
+
+// Configure string concat to always inline compile
+tasks.withType(JavaCompile) {
+    options.compilerArgs.add '-XDstringConcat=inline'
+}
