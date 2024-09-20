@@ -53,7 +53,8 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureDefaultCommands();
-        configureButtonBindings();
+        // configureButtonBindings();
+        configureDemoBindingsOnlyDriver();
         configureAutons();
     }
 
@@ -69,6 +70,17 @@ public class RobotContainer {
     /***************/
     /*** BUTTONS ***/
     /***************/
+
+    private void configureDemoBindingsOnlyDriver() {
+        driver.getRightTriggerButton()
+                .onTrue(new IntakeExtend(intake))
+                .whileTrue(new IntakeAcquire(intake))
+                .onFalse(
+                        new IntakeRetract(intake));
+        
+        driver.getTopButton().onTrue(new ShooterSetRPM(shooter, 2500));
+        driver.getLeftButton().whileTrue(new ConveyorShoot(conveyor).perpetually());
+    }
 
     private void configureButtonBindings() {
         /*** Climber ***/
@@ -121,10 +133,11 @@ public class RobotContainer {
         driver.getTopButton().whileTrue(new BetterShootAnywhere(this).perpetually());
         // driver.getTopButton().whileTrue(new TestAlign(this).thenShoot(conveyor));
 
-       driver.getRightBumper().whileTrue(new DrivetrainAlignNew(drivetrain, camera).perpetually());
+        driver.getRightBumper().whileTrue(new DrivetrainAlignNew(drivetrain, camera).perpetually());
 
         /*** Intake ***/
-        operator.getRightTriggerButton()
+        // operator.getRightTriggerButton()
+        driver.getRightTriggerButton()
                 .onTrue(new IntakeExtend(intake))
                 .whileTrue(new IntakeAcquire(intake))
                 .onFalse(
@@ -146,7 +159,8 @@ public class RobotContainer {
         operator.getDPadDown().onTrue(new ShooterPadShot(shooter));
         operator.getDPadUp().onTrue(new ClimberJiggle(climber));
 
-        operator.getRightButton().whileTrue(new ConveyorShoot(conveyor).perpetually());
+        driver.getRightButton().whileTrue(new ConveyorShoot(conveyor).perpetually());
+        // operator.getRightButton().whileTrue(new ConveyorShoot(conveyor).perpetually());
 
         operator.getLeftBumper().onTrue(new ShooterStop(shooter));       
     }

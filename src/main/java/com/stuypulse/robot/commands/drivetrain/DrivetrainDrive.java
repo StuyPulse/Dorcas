@@ -36,7 +36,7 @@ public class DrivetrainDrive extends CommandBase {
                         .filtered(new BDebounceRC.Both(Settings.Drivetrain.Stalling.DEBOUNCE_TIME));
 
         this.speed =
-                IStream.create(() -> driver.getRightTrigger() - driver.getLeftTrigger())
+                IStream.create(() -> driver.getLeftY())
                         .filtered(
                                 x -> SLMath.deadband(x, Settings.Drivetrain.SPEED_DEADBAND.get()),
                                 x -> SLMath.spow(x, Settings.Drivetrain.SPEED_POWER.get()),
@@ -44,12 +44,19 @@ public class DrivetrainDrive extends CommandBase {
                                 x -> x * Settings.Drivetrain.KIDDIE_SPEED_PERCENT);
 
         this.angle =
-                IStream.create(() -> driver.getLeftX())
-                        .filtered(
-                                x -> SLMath.deadband(x, Settings.Drivetrain.ANGLE_DEADBAND.get()),
-                                x -> SLMath.spow(x, Settings.Drivetrain.ANGLE_POWER.get()),
-                                new LowPassFilter(Settings.Drivetrain.ANGLE_FILTER),
-                                x -> x * Settings.Drivetrain.KIDDIE_TURN_PERCENT);
+                IStream.create(() -> {
+                    if (speed.get() >= 0) {
+                        return driver.getRightX();
+                    }
+                    else {
+                        return -driver.getRightX();
+                    }
+                })
+                .filtered(
+                        x -> SLMath.deadband(x, Settings.Drivetrain.ANGLE_DEADBAND.get()),
+                        x -> SLMath.spow(x, Settings.Drivetrain.ANGLE_POWER.get()),
+                        new LowPassFilter(Settings.Drivetrain.ANGLE_FILTER),
+                        x -> x * Settings.Drivetrain.KIDDIE_TURN_PERCENT);
 
         addRequirements(drivetrain);
     }
