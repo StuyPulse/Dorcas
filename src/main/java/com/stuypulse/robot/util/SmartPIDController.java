@@ -5,8 +5,7 @@
 
 package com.stuypulse.robot.util;
 
-import com.stuypulse.stuylib.control.PIDCalculator;
-import com.stuypulse.stuylib.control.PIDController;
+import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
@@ -36,17 +35,17 @@ public class SmartPIDController extends PIDController {
     }
 
     @Override
-    protected double calculate(double error) {
+    protected double calculate(double setpoint, double measurement) {
         if (tuningPID.get()) {
             tuningPD.set(false);
             setPID(calculator.getPIDController());
-            return calculator.update(error);
+            return calculator.update(setpoint, measurement);
         } else if (tuningPD.get()) {
             tuningPID.set(false);
             setPID(calculator.getPDController());
-            return calculator.update(error);
+            return calculator.update(setpoint, measurement);
         } else {
-            return super.calculate(error);
+            return super.calculate(setpoint, measurement);
         }
     }
 }

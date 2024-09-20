@@ -73,80 +73,80 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /*** Climber ***/
         operator.getRightStickDown()
-                .whenPressed(new IntakeRetract(intake))
-                .whenPressed(new ShooterStop(shooter))
-                .whenPressed(new ShooterRetractHood(shooter))
-                .whileHeld(new ConveyorStop(conveyor))
-                .whileHeld(new IntakeStop(intake))
-                .whileHeld(new ClimberMoveUp(climber));
+                .onTrue(new IntakeRetract(intake))
+                .onTrue(new ShooterStop(shooter))
+                .onTrue(new ShooterRetractHood(shooter))
+                .whileTrue(new ConveyorStop(conveyor))
+                .whileTrue(new IntakeStop(intake))
+                .whileTrue(new ClimberMoveUp(climber));
 
         operator.getRightStickUp()
-                .whenPressed(new IntakeRetract(intake))
-                .whenPressed(new ShooterStop(shooter))
-                .whenPressed(new ShooterRetractHood(shooter))
-                .whileHeld(new ConveyorStop(conveyor))
-                .whileHeld(new IntakeStop(intake))
-                .whileHeld(new DrivetrainStop(drivetrain))
-                .whileHeld(new ClimberMoveDown(climber));
+                .onTrue(new IntakeRetract(intake))
+                .onTrue(new ShooterStop(shooter))
+                .onTrue(new ShooterRetractHood(shooter))
+                .whileTrue(new ConveyorStop(conveyor))
+                .whileTrue(new IntakeStop(intake))
+                .whileTrue(new DrivetrainStop(drivetrain))
+                .whileTrue(new ClimberMoveDown(climber));
 
-        operator.getLeftStickRight().whenPressed(new ClimberMaxTilt(climber));
-        operator.getLeftStickLeft().whenPressed(new ClimberNoTilt(climber));
+        operator.getLeftStickRight().onTrue(new ClimberMaxTilt(climber));
+        operator.getLeftStickLeft().onTrue(new ClimberNoTilt(climber));
 
-        operator.getSelectButton().whileHeld(new ClimberForceLower(climber));
+        operator.getRightMenuButton().whileTrue(new ClimberForceLower(climber));
 
         /*** Conveyor ***/
-        operator.getTopButton().whileHeld(new ConveyorStop(conveyor));
-        operator.getLeftButton().whileHeld(new ConveyorForceEject(conveyor));
+        operator.getTopButton().whileTrue(new ConveyorStop(conveyor));
+        operator.getLeftButton().whileTrue(new ConveyorForceEject(conveyor));
 
         /*** Drivetrain ***/
 
         // Right Button --> Low Gear
 
         // driver.getLeftButton() // --> Low Gear
-        //         .whileHeld(new ShooterFenderShot(shooter))
-        //         .whileHeld(new WaitCommand(0.3).andThen(new ConveyorShootSemi(conveyor).perpetually())); 
+        //         .whileTrue(new ShooterFenderShot(shooter))
+        //         .whileTrue(new WaitCommand(0.3).andThen(new ConveyorShootSemi(conveyor).perpetually())); 
 
         driver.getBottomButton()
-                .whileHeld(new ShooterRingShot(shooter))
-                .whileHeld(new DrivetrainAlign(drivetrain, camera).thenShoot(conveyor));
+                .whileTrue(new ShooterRingShot(shooter))
+                .whileTrue(new DrivetrainAlign(drivetrain, camera).thenShoot(conveyor));
 
         driver.getLeftBumper()
-                .whileHeld(new ShooterPadShot(shooter))
-                .whileHeld(new DrivetrainPadAlign(drivetrain, camera).thenShoot(conveyor));
+                .whileTrue(new ShooterPadShot(shooter))
+                .whileTrue(new DrivetrainPadAlign(drivetrain, camera).thenShoot(conveyor));
 
-        // driver.getRightButton().whileHeld(new SimpleAlignShoot(this));
+        // driver.getRightButton().whileTrue(new SimpleAlignShoot(this));
         
-        driver.getTopButton().whileHeld(new BetterShootAnywhere(this).perpetually());
-        // driver.getTopButton().whileHeld(new TestAlign(this).thenShoot(conveyor));
+        driver.getTopButton().whileTrue(new BetterShootAnywhere(this).repeatedly());
+        // driver.getTopButton().whileTrue(new TestAlign(this).thenShoot(conveyor));
 
-        driver.getRightBumper().whileHeld(new DrivetrainAlign(drivetrain, camera).perpetually());
+        driver.getRightBumper().whileTrue(new DrivetrainAlign(drivetrain, camera).repeatedly());
 
         /*** Intake ***/
         operator.getRightTriggerButton()
-                .whenPressed(new IntakeExtend(intake))
-                .whileHeld(new IntakeAcquire(intake))
-                .whenReleased(
+                .onTrue(new IntakeExtend(intake))
+                .whileTrue(new IntakeAcquire(intake))
+                .onFalse(
                         new IntakeRetract(intake));
 
         operator.getRightBumper()
-                .whenPressed(new IntakeExtend(intake))
-                .whileHeld(new IntakeAcquire(intake))
-                .whileHeld(new ConveyorForceIntake(conveyor))
-                .whenReleased(new IntakeRetract(intake));
+                .onTrue(new IntakeExtend(intake))
+                .whileTrue(new IntakeAcquire(intake))
+                .whileTrue(new ConveyorForceIntake(conveyor))
+                .onFalse(new IntakeRetract(intake));
 
-        operator.getLeftTriggerButton().whileHeld(new IntakeDeacquire(intake));
+        operator.getLeftTriggerButton().whileTrue(new IntakeDeacquire(intake));
 
-        operator.getDPadUp().whenPressed(new IntakeRetract(intake));
+        operator.getDPadUp().onTrue(new IntakeRetract(intake));
 
         /*** Shooter ***/
-        operator.getDPadLeft().whenPressed(new ShooterFenderShot(shooter));
-        operator.getDPadRight().whenPressed(new ShooterRingShot(shooter));
-        operator.getDPadDown().whenPressed(new ShooterPadShot(shooter));
-        operator.getDPadUp().whenPressed(new ClimberJiggle(climber));
+        operator.getDPadLeft().onTrue(new ShooterFenderShot(shooter));
+        operator.getDPadRight().onTrue(new ShooterRingShot(shooter));
+        operator.getDPadDown().onTrue(new ShooterPadShot(shooter));
+        operator.getDPadUp().onTrue(new ClimberJiggle(climber));
 
-        operator.getRightButton().whileHeld(new ConveyorShoot(conveyor).perpetually());
+        operator.getRightButton().whileTrue(new ConveyorShoot(conveyor).repeatedly());
 
-        operator.getLeftBumper().whenPressed(new ShooterStop(shooter));
+        operator.getLeftBumper().onTrue(new ShooterStop(shooter));
     }
 
     /**************/

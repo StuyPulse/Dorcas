@@ -65,7 +65,7 @@ public class PartnerBallAuton extends SequentialCommandGroup {
         // shoot top ball
         addCommands(
             new LEDSet(robot.leds, LEDColor.GREEN),
-            new WaitCommand(ACQUIRE_PARTNER_BALL_TIME).withInterrupt(robot.conveyor::isFull),
+            new WaitCommand(ACQUIRE_PARTNER_BALL_TIME).until(robot.conveyor::isFull),
             new ConveyorShootTop(robot.conveyor).withTimeout(CONVEYOR_TO_SHOOTER),
             new WaitCommand(PARTNER_MOVE_BACK_TIME));
 

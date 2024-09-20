@@ -16,6 +16,7 @@ import com.stuypulse.robot.constants.Settings.Drivetrain.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelPositions;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -33,7 +34,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.kauailabs.navx.frc.AHRS;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 /*-
  * Moves the robot around
@@ -108,7 +109,7 @@ public class Drivetrain extends SubsystemBase {
                 };
 
         // Make differential drive object
-        drivetrain =
+        drivetrain = 
                 new DifferentialDrive(
                         new MotorControllerGroup(leftMotors),
                         new MotorControllerGroup(rightMotors));
@@ -129,7 +130,7 @@ public class Drivetrain extends SubsystemBase {
         navx = new AHRS(SPI.Port.kMXP);
 
         // Initialize Odometry
-        odometry = new DifferentialDriveOdometry(getRotation2d());
+        odometry = new DifferentialDriveOdometry(getRotation2d(), getLeftDistance(), getRightDistance());
         field = new Field2d();
         reset(Odometry.STARTING_POSITION);
 
@@ -287,7 +288,7 @@ public class Drivetrain extends SubsystemBase {
         leftGrayhill.reset();
         rightGrayhill.reset();
 
-        odometry.resetPosition(location, getRotation2d());
+        odometry.resetPosition(getRotation2d(), new DifferentialDriveWheelPositions(getLeftDistance(), getRightDistance()), location);
     }
 
     public void reset() {

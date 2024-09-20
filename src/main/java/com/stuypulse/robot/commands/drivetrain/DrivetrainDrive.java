@@ -7,18 +7,18 @@ package com.stuypulse.robot.commands.drivetrain;
 
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.SLMath;
-import com.stuypulse.stuylib.streams.IStream;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
-import com.stuypulse.stuylib.streams.filters.LowPassFilter;
+import com.stuypulse.stuylib.streams.numbers.IStream;
+import com.stuypulse.stuylib.streams.numbers.filters.LowPassFilter;
+
+import edu.wpi.first.wpilibj2.command.Command;
 
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Drivetrain.Stalling;
 import com.stuypulse.robot.subsystems.Drivetrain;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-
-public class DrivetrainDrive extends CommandBase {
+public class DrivetrainDrive extends Command {
 
     private final Drivetrain drivetrain;
     private final Gamepad driver;

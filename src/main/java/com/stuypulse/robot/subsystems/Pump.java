@@ -34,7 +34,7 @@ public class Pump extends SubsystemBase {
     }
 
     public boolean getCompressing() {
-        return compressor.enabled();
+        return compressor.isEnabled();
     }
 
     // Start Compressing the Robot

@@ -87,7 +87,7 @@ public class FourBallAuton extends SequentialCommandGroup {
         addCommands(
             new LEDSet(robot.leds, LEDColor.WHITE.pulse()),
 
-            new WaitCommand(HUMAN_WAIT_TIME).withInterrupt(() -> robot.conveyor.isFull())
+            new WaitCommand(HUMAN_WAIT_TIME).until(() -> robot.conveyor.isFull())
         );
 
         addCommands(
@@ -104,7 +104,7 @@ public class FourBallAuton extends SequentialCommandGroup {
 
         addCommands(
             new LEDSet(robot.leds, LEDColor.RAINBOW),
-            new ConveyorShoot(robot.conveyor).perpetually()
+            new ConveyorShoot(robot.conveyor).repeatedly()
         );
 
     }

@@ -7,12 +7,10 @@ package com.stuypulse.robot.commands.drivetrain;
 
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.stuylib.streams.IFuser;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
-import com.stuypulse.stuylib.streams.filters.IFilter;
-import com.stuypulse.stuylib.streams.filters.LowPassFilter;
-
+import com.stuypulse.stuylib.streams.numbers.filters.IFilter;
+import com.stuypulse.stuylib.streams.numbers.filters.LowPassFilter;
 import com.stuypulse.robot.commands.ThenShoot;
 import com.stuypulse.robot.commands.conveyor.modes.ConveyorMode;
 import com.stuypulse.robot.constants.Settings;
@@ -21,11 +19,11 @@ import com.stuypulse.robot.constants.Settings.Limelight;
 import com.stuypulse.robot.subsystems.Camera;
 import com.stuypulse.robot.subsystems.Conveyor;
 import com.stuypulse.robot.subsystems.Drivetrain;
+import com.stuypulse.robot.util.IFuser;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DrivetrainPadAlignV2 extends CommandBase {
+public class DrivetrainPadAlignV2 extends Command {
 
     private final Drivetrain drivetrain;
 
@@ -82,9 +80,6 @@ public class DrivetrainPadAlignV2 extends CommandBase {
         drivetrain.setLowGear();
 
         speedAdjFilter = new LowPassFilter(Alignment.SPEED_ADJ_FILTER);
-
-        angleError.initialize();
-        distanceError.initialize();
     }
 
     private double getSpeedAdjustment() {

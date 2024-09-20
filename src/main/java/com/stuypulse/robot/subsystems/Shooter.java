@@ -6,10 +6,9 @@
 package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.stuylib.network.SmartNumber;
-import com.stuypulse.stuylib.streams.filters.IFilter;
-import com.stuypulse.stuylib.streams.filters.LowPassFilter;
-import com.stuypulse.stuylib.streams.filters.TimedRateLimit;
-
+import com.stuypulse.stuylib.streams.numbers.filters.IFilter;
+import com.stuypulse.stuylib.streams.numbers.filters.LowPassFilter;
+import com.stuypulse.stuylib.streams.numbers.filters.RateLimit;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
@@ -20,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 /**
  * Shooter subsystem for shooting balls out of the robot.
@@ -48,7 +47,7 @@ public class Shooter extends SubsystemBase {
         /** TARGET RPM VARIABLES * */
         targetRPM = new SmartNumber("Shooter/Target RPM", 0.0);
         targetFilter =
-                new TimedRateLimit(Settings.Shooter.MAX_TARGET_RPM_CHANGE)
+                new RateLimit(Settings.Shooter.MAX_TARGET_RPM_CHANGE)
                         .then(new LowPassFilter(Settings.Shooter.CHANGE_RC));
 
         /** SHOOTER * */

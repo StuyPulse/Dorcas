@@ -63,9 +63,9 @@ public class LEDController extends SubsystemBase {
 
     private void setLEDConditions() {
         new TeleopButton(() -> robot.colorSensor.hasBall(BallColor.RED_BALL))
-                .whenPressed(new LEDSet(this, LEDColor.RED));
+                .onTrue(new LEDSet(this, LEDColor.RED));
         new TeleopButton(() -> robot.colorSensor.hasBall(BallColor.BLUE_BALL))
-                .whenPressed(new LEDSet(this, LEDColor.BLUE));
+                .onTrue(new LEDSet(this, LEDColor.BLUE));
     }
 
     public LEDColor getDefaultColor() {

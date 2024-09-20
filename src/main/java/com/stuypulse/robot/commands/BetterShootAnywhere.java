@@ -7,9 +7,11 @@ package com.stuypulse.robot.commands;
 
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.math.SLMath;
-import com.stuypulse.stuylib.streams.IFuser;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
+
+import edu.wpi.first.wpilibj2.command.Command;
+
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.commands.conveyor.modes.ConveyorMode;
 import com.stuypulse.robot.constants.ShotMap;
@@ -19,10 +21,9 @@ import com.stuypulse.robot.subsystems.Camera;
 import com.stuypulse.robot.subsystems.Conveyor;
 import com.stuypulse.robot.subsystems.Drivetrain;
 import com.stuypulse.robot.subsystems.Shooter;
+import com.stuypulse.robot.util.IFuser;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-
-public class BetterShootAnywhere extends CommandBase {
+public class BetterShootAnywhere extends Command {
 
     // subsystems
     private final Camera camera;
@@ -86,9 +87,6 @@ public class BetterShootAnywhere extends CommandBase {
     public void initialize() {
         drivetrain.setLowGear();
         shooter.retractHood();
-
-        angleError.initialize();
-        distance.initialize();
     }
 
     private double getTargetDistance() {

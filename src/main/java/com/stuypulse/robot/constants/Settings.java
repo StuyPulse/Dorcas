@@ -9,10 +9,9 @@ import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
-import com.stuypulse.stuylib.streams.IStream;
-import com.stuypulse.stuylib.streams.filters.IFilterGroup;
-import com.stuypulse.stuylib.streams.filters.LowPassFilter;
-
+import com.stuypulse.stuylib.streams.numbers.IStream;
+import com.stuypulse.stuylib.streams.numbers.filters.IFilterGroup;
+import com.stuypulse.stuylib.streams.numbers.filters.LowPassFilter;
 import com.stuypulse.robot.util.SmartPIDController;
 import com.stuypulse.robot.util.SpeedAdjustment;
 
@@ -359,8 +358,6 @@ public interface Settings {
 
             double BANG_BANG = 0.7;
 
-            SmartNumber ERROR_FILTER =
-                    new SmartNumber("Drivetrain/Alignment/Speed/Error Filter", 0.0);
             SmartNumber OUT_FILTER =
                     new SmartNumber("Drivetrain/Alignment/Speed/Output Filter", 0.1);
 
@@ -368,7 +365,6 @@ public interface Settings {
                 return new SmartPIDController("Drivetrain/Alignment/Speed")
                         .setControlSpeed(BANG_BANG)
                         .setPID(kP, kI, kD)
-                        .setErrorFilter(new LowPassFilter(ERROR_FILTER))
                         .setOutputFilter(
                                 new IFilterGroup(SLMath::clamp, new LowPassFilter(OUT_FILTER)));
             }
@@ -377,7 +373,6 @@ public interface Settings {
                 return new SmartPIDController("Drivetrain/Alignment/Speed")
                         .setControlSpeed(BANG_BANG)
                         .setPID(kP, kI, kD)
-                        .setErrorFilter(new LowPassFilter(ERROR_FILTER))
                         .setOutputFilter(
                                 new IFilterGroup(SLMath::clamp, new LowPassFilter(OUT_FILTER), new SpeedAdjustment(angleError)));
             }
@@ -399,7 +394,6 @@ public interface Settings {
                 return new SmartPIDController("Drivetrain/Alignment/Angle")
                         .setControlSpeed(BANG_BANG)
                         .setPID(kP, kI, kD)
-                        .setErrorFilter(new LowPassFilter(ERROR_FILTER))
                         .setOutputFilter(
                                 new IFilterGroup(SLMath::clamp, new LowPassFilter(OUT_FILTER)));
             }

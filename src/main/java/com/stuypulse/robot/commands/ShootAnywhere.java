@@ -7,7 +7,6 @@ package com.stuypulse.robot.commands;
 
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.stuylib.streams.IFuser;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
 
@@ -20,11 +19,12 @@ import com.stuypulse.robot.constants.ShotMap;
 import com.stuypulse.robot.subsystems.Conveyor;
 import com.stuypulse.robot.subsystems.Drivetrain;
 import com.stuypulse.robot.subsystems.Shooter;
+import com.stuypulse.robot.util.IFuser;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class ShootAnywhere extends CommandBase {
+public class ShootAnywhere extends Command {
 
     private final Conveyor conveyor;
     private final Drivetrain drivetrain;
@@ -78,8 +78,6 @@ public class ShootAnywhere extends CommandBase {
     public void initialize() {
         drivetrain.setLowGear();
         shooter.retractHood();
-        angleError.initialize();
-        distance.initialize();
     }
 
     private double getTurn() {

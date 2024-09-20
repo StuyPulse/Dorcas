@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        new TeleopInit(robot).schedule(false);
+        new TeleopInit(robot).schedule();
         robot.pump.compress();
 
         if (auto != null) {

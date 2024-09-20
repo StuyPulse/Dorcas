@@ -5,10 +5,8 @@
 
 package com.stuypulse.robot.constants;
 
-import static com.revrobotics.CANSparkMax.IdleMode.*;
-
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 /*-
  * File containing all of the configurations that different motors require.
@@ -21,27 +19,27 @@ import com.revrobotics.CANSparkMax.IdleMode;
  */
 public interface Motors {
 
-    Config CLIMBER = new Config(true, kBrake, 80, 1.0 / 5.0);
+    Config CLIMBER = new Config(true, IdleMode.kBrake, 80, 1.0 / 5.0);
 
     public interface Conveyor {
-        Config GANDALF = new Config(true, kBrake, 40);
-        Config TOP_BELT = new Config(false, kBrake, 30);
+        Config GANDALF = new Config(true, IdleMode.kBrake, 40);
+        Config TOP_BELT = new Config(false, IdleMode.kBrake, 30);
     }
 
     public interface Drivetrain {
         int CURRENT_LIMIT_AMPS = 60;
-        IdleMode IDLE_MODE = kBrake;
+        IdleMode IDLE_MODE = IdleMode.kBrake;
 
         Config LEFT = new Config(true, IDLE_MODE, CURRENT_LIMIT_AMPS);
         Config RIGHT = new Config(false, IDLE_MODE, CURRENT_LIMIT_AMPS);
     }
 
-    Config INTAKE = new Config(true, kBrake, 50);
+    Config INTAKE = new Config(true, IdleMode.kBrake, 50);
 
     public interface Shooter {
-        Config LEFT = new Config(false, kCoast, 60);
-        Config RIGHT = new Config(true, kCoast, 60);
-        Config FEEDER = new Config(false, kCoast, 80);
+        Config LEFT = new Config(false, IdleMode.kCoast, 60);
+        Config RIGHT = new Config(true, IdleMode.kCoast, 60);
+        Config FEEDER = new Config(false, IdleMode.kCoast, 80);
     }
 
     /** Class to store all of the values a motor needs */

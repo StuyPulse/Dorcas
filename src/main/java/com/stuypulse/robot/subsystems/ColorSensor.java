@@ -106,14 +106,17 @@ public class ColorSensor extends SubsystemBase {
     /*** TARGET BALL DETERMINATION ***/
 
     public BallColor getTargetBallUpdate() {
-        switch (DriverStation.getAlliance()) {
-            default:
-                Settings.reportWarning("DriverStation.getAlliance() returned invalid Color!");
-            case Red:
-                return target = BallColor.RED_BALL;
-            case Blue:
-                return target = BallColor.BLUE_BALL;
+        if (DriverStation.getAlliance().isPresent()) {
+            switch (DriverStation.getAlliance().get()) {
+                default:
+                    Settings.reportWarning("DriverStation.getAlliance() returned invalid Color!");
+                case Red:
+                    return target = BallColor.RED_BALL;
+                case Blue:
+                    return target = BallColor.BLUE_BALL;
+            }
         }
+        return BallColor.BLUE_BALL;
     }
 
     public BallColor getTargetBall() {
